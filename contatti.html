@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contatti — ResidenzaUdine</title>
+  <meta name="description" content="Contatta ResidenzaUdine per informazioni su camere e disponibilità. Rispondiamo entro 24 ore via email, telefono o WhatsApp." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Residenza<span>Udine</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="camere.html">Camere</a>
+      <a href="servizi.html">Servizi</a>
+      <a href="location.html">Location</a>
+      <a href="about.html">Chi siamo</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contatti.html" class="btn btn-primario nav-cta attivo">Contattaci</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="index.html">Home</a>
+    <a href="camere.html">Camere</a>
+    <a href="servizi.html">Servizi</a>
+    <a href="location.html">Location</a>
+    <a href="about.html">Chi siamo</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contatti.html" class="btn btn-primario nav-cta-mobile">Contattaci</a>
+  </div>
+</nav>
+
+<div class="hero-pagina">
+  <span class="eyebrow eyebrow-white">Siamo qui per te</span>
+  <h1>Contattaci</h1>
+  <p>Hai domande sulla disponibilità o vuoi prenotare una visita? Scrivici — rispondiamo entro 24 ore.</p>
+</div>
+
+<section class="sezione">
+  <div class="container">
+    <div class="contatti-grid">
+
+      <div class="contatti-info">
+        <h3>Come raggiungerci</h3>
+        <p>Siamo disponibili dal lunedì al venerdì dalle 9:00 alle 18:00, il sabato su appuntamento. Per urgenze puoi sempre scriverci su WhatsApp.</p>
+
+        <div class="contatto-dettagli">
+          <div class="contatto-item">
+            <div class="contatto-icon">📍</div>
+            <div>
+              <div class="contatto-label">Indirizzo</div>
+              <!-- Sostituisci con l'indirizzo reale -->
+              <div class="contatto-valore">Via [Inserisci indirizzo], Udine 33100</div>
+            </div>
+          </div>
+          <div class="contatto-item">
+            <div class="contatto-icon">📞</div>
+            <div>
+              <div class="contatto-label">Telefono</div>
+              <!-- Sostituisci con il numero reale -->
+              <div class="contatto-valore">+39 0432 000 000</div>
+            </div>
+          </div>
+          <div class="contatto-item">
+            <div class="contatto-icon">✉️</div>
+            <div>
+              <div class="contatto-label">Email</div>
+              <!-- Sostituisci con l'email reale -->
+              <div class="contatto-valore">info@residenzaudine.it</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottone WhatsApp - sostituisci il numero -->
+        <a href="https://wa.me/39000000000?text=Ciao!%20Vorrei%20informazioni%20sulle%20camere%20disponibili." class="whatsapp-btn">
+          <span style="font-size:1.3rem;">💬</span>
+          Scrivici su WhatsApp
+        </a>
+
+        <div class="orari">
+          <h4>⏰ Orari di disponibilità</h4>
+          <p>Lunedì – Venerdì: 9:00 – 18:00<br/>
+          Sabato: 10:00 – 13:00 (su appuntamento)<br/>
+          Domenica: chiuso (WhatsApp attivo)</p>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <h3>Invia una richiesta</h3>
+        <!-- 
+          COME RENDERE IL FORM FUNZIONANTE:
+          Opzione 1: usa Formspree.io (gratuito) — aggiungi action="https://formspree.io/f/TUOID"
+          Opzione 2: usa Netlify Forms — aggiungi netlify all'attributo <form>
+          Opzione 3: collega a un backend personalizzato
+        -->
+        <form id="form-contatto" onsubmit="inviaForm(event)">
+          <div class="form-riga">
+            <div class="form-group">
+              <label for="nome">Nome e cognome *</label>
+              <input type="text" id="nome" name="nome" placeholder="Mario Rossi" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" placeholder="mario@email.com" required />
+            </div>
+          </div>
+          <div class="form-riga">
+            <div class="form-group">
+              <label for="telefono">Telefono</label>
+              <input type="tel" id="telefono" name="telefono" placeholder="+39 333 000 0000" />
+            </div>
+            <div class="form-group">
+              <label for="arrivo">Data di arrivo prevista</label>
+              <input type="date" id="arrivo" name="arrivo" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="tipo-camera">Tipo di camera di interesse</label>
+            <select id="tipo-camera" name="tipo-camera">
+              <option value="">— Seleziona —</option>
+              <option value="singola">Camera singola (da €450/mese)</option>
+              <option value="doppia">Camera doppia (da €320/mese a persona)</option>
+              <option value="monolocale">Monolocale (da €550/mese)</option>
+              <option value="non-so">Non so ancora — vorrei informazioni</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="messaggio">Messaggio *</label>
+            <textarea id="messaggio" name="messaggio" placeholder="Ciao! Sono uno studente di [università/corso] e cerco una camera per [periodo]. Vorrei sapere..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primario btn-lg btn-full">
+            Invia richiesta
+          </button>
+          <p class="form-nota">🔒 I tuoi dati sono al sicuro. Non li condividiamo con terzi. Rispondiamo entro 24 ore.</p>
+        </form>
+        <div id="form-successo" style="display:none;text-align:center;padding:30px 0;">
+          <div style="font-size:3rem;margin-bottom:12px;">✅</div>
+          <h3 style="margin-bottom:8px;">Messaggio inviato!</h3>
+          <p style="color:var(--testo-light);">Ti risponderemo entro 24 ore. A presto!</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-griglia">
+      <div class="footer-brand">
+        <div class="footer-logo">Residenza<span>Udine</span></div>
+        <p>Una residenza studentesca moderna e accogliente nel cuore di Udine, a due passi dall'Università degli Studi di Udine.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Pagine</h4>
+        <a href="index.html">Home</a>
+        <a href="camere.html">Camere</a>
+        <a href="servizi.html">Servizi</a>
+        <a href="location.html">Location</a>
+      </div>
+      <div class="footer-col">
+        <h4>Residenza</h4>
+        <a href="about.html">Chi siamo</a>
+        <a href="galleria.html">Galleria</a>
+        <a href="faq.html">FAQ</a>
+        <a href="contatti.html">Contatti</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contatti</h4>
+        <a href="tel:+390432000000">+39 0432 000000</a>
+        <a href="mailto:info@residenzaudine.it">info@residenzaudine.it</a>
+        <a href="https://wa.me/39000000000">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 ResidenzaUdine. Tutti i diritti riservati.</span>
+      <div style="display:flex;gap:16px;"><a href="#">Privacy Policy</a><a href="#">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+// Form demo (mostra conferma senza inviare davvero)
+// Sostituisci con Formspree, Netlify Forms o il tuo backend
+function inviaForm(e) {
+  e.preventDefault();
+  document.getElementById('form-contatto').style.display = 'none';
+  document.getElementById('form-successo').style.display = 'block';
+}
+</script>
+</body>
+</html>
