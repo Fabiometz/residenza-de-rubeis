@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi siamo — Residenza De Rubeis Udine</title>
+  <meta name="description" content="La storia e la missione della Residenza De Rubeis: una residenza studentesca premium in Via De Rubeis, Udine, vicino alla stazione." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: { gold: '#C9A04A' },
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { cursor: auto; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #070B14; }
+    ::-webkit-scrollbar-thumb { background: #1B2E4B; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C9A04A; }
+
+    .gold-text {
+      background: linear-gradient(135deg, #E2C98A 0%, #C9A04A 55%, #9A7228 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .glass {
+      background: rgba(13,20,36,0.75);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(27,46,75,0.9);
+    }
+    .nav-clear { background: transparent; }
+    .nav-solid {
+      background: rgba(7,11,20,0.82);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border-bottom: 1px solid rgba(201,160,74,0.14);
+      box-shadow: 0 8px 40px rgba(0,0,0,.35);
+    }
+
+    /* Char split (hero) */
+    .char { display: inline-block; will-change: transform, opacity; }
+    .split-line { display: block; overflow: hidden; }
+
+    /* Bento grid */
+    .bento { display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:248px; gap:14px; }
+    .b-lg  { grid-column:span 2; grid-row:span 2; }
+    .b-wide{ grid-column:span 2; }
+    .bento-card { transition:border-color .3s, transform .3s, box-shadow .3s; }
+    .bento-card:hover { border-color:rgba(201,160,74,.38) !important; transform:translateY(-3px); box-shadow:0 24px 60px rgba(0,0,0,.45); }
+    @media(max-width:768px){
+      .bento { grid-template-columns:1fr; grid-auto-rows:auto; }
+      .b-lg,.b-wide { grid-column:span 1; grid-row:span 1; }
+    }
+
+    .stat-num {
+      background: linear-gradient(135deg,#E2C98A,#C9A04A);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+
+    @keyframes arrowBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(9px)} }
+    .arrow-bounce { animation:arrowBounce 2.2s ease-in-out infinite; }
+    @keyframes goldenPulse { 0%,100%{box-shadow:0 0 0 3px rgba(201,160,74,.25)} 50%{box-shadow:0 0 0 7px rgba(201,160,74,.07)} }
+    .gold-pulse { animation:goldenPulse 2.4s ease-in-out infinite; }
+
+    .gold-border-card { border: 1px solid rgba(201,160,74,.18); transition: border-color .3s, transform .3s; }
+    .gold-border-card:hover { border-color:rgba(201,160,74,.5); transform:translateY(-2px); }
+
+    /* 3D gallery */
+    .gal-card { transform-style: preserve-3d; transition: transform .15s ease-out; will-change: transform; }
+    .gal-inner { transform: translateZ(40px); transition: transform .3s; }
+    .gal-shine {
+      position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .3s;
+      background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(201,160,74,.22) 0%, transparent 45%);
+    }
+    .gal-card:hover .gal-shine { opacity:1; }
+
+    /* Custom cursor */
+    .cursor-dot, .cursor-ring {
+      position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none;
+      z-index: 9999; mix-blend-mode: difference; will-change: transform;
+    }
+    .cursor-dot  { width: 7px; height: 7px; background: #fff; margin:-3.5px 0 0 -3.5px; }
+    .cursor-ring { width: 38px; height: 38px; border: 1.5px solid rgba(255,255,255,.55); margin:-19px 0 0 -19px; transition: width .25s, height .25s, margin .25s, border-color .25s; }
+    .cursor-ring.grow { width: 64px; height: 64px; margin:-32px 0 0 -32px; border-color: rgba(201,160,74,.8); }
+    @media (hover: none), (pointer: coarse) { .cursor-dot, .cursor-ring { display:none; } }
+
+    /* Page transition overlay */
+    #page-curtain {
+      position: fixed; inset: 0; z-index: 10000; background: #070B14;
+      display: flex; align-items: center; justify-content: center; pointer-events: none;
+    }
+    #page-curtain .curtain-logo { opacity: 0; }
+
+    /* hero particle canvas */
+    #hero-particles { position:absolute; inset:0; z-index:1; pointer-events:none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .arrow-bounce, .gold-pulse { animation: none; }
+    }
+  </style>
+</head>
+<body class="bg-[#070B14] text-white font-sans antialiased overflow-x-hidden">
+
+<!-- ═══ CUSTOM CURSOR ═══ -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<!-- ═══ PAGE TRANSITION CURTAIN ═══ -->
+<div id="page-curtain">
+  <div class="curtain-logo font-display text-2xl font-bold tracking-tight">
+    Residenza <span class="gold-text">De Rubeis</span>
+  </div>
+</div>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 nav-clear">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-500" id="nav-inner" style="height:78px">
+    <a href="index.html" data-link class="font-display text-[1.15rem] font-bold tracking-tight text-white">
+      Residenza <span class="gold-text">De Rubeis</span>
+    </a>
+    <div class="hidden md:flex items-center gap-0.5">
+      <a href="index.html"    data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white/65 hover:text-white hover:bg-white/6 rounded-lg transition-all">Home</a>
+      <a href="camere.html"   data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white/65 hover:text-white hover:bg-white/6 rounded-lg transition-all">Camere</a>
+      <a href="servizi.html"  data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white/65 hover:text-white hover:bg-white/6 rounded-lg transition-all">Servizi</a>
+      <a href="location.html" data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white/65 hover:text-white hover:bg-white/6 rounded-lg transition-all">Location</a>
+      <a href="about.html"    data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white rounded-lg bg-white/8">Chi siamo</a>
+      <a href="faq.html"      data-link class="nav-link px-3 py-2 text-[13.5px] font-semibold text-white/65 hover:text-white hover:bg-white/6 rounded-lg transition-all">FAQ</a>
+      <a href="contatti.html" data-link data-magnetic class="ml-3 px-5 py-2.5 bg-[#C9A04A] text-[#070B14] text-[13.5px] font-bold rounded-xl hover:bg-[#E2C98A] transition-colors shadow-lg shadow-[#C9A04A]/20">Contattaci</a>
+    </div>
+    <button id="menu-btn" class="md:hidden p-2 flex flex-col gap-[5px]" aria-label="Menu">
+      <span class="block w-5 h-[2px] bg-white rounded"></span>
+      <span class="block w-5 h-[2px] bg-white rounded"></span>
+      <span class="block w-5 h-[2px] bg-white rounded"></span>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden md:hidden border-t border-white/8" style="background:rgba(7,11,20,.97);backdrop-filter:blur(20px)">
+    <div class="px-6 py-4 flex flex-col gap-1">
+      <a href="index.html"    data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white/70 rounded-lg hover:bg-white/5">Home</a>
+      <a href="camere.html"   data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white/70 rounded-lg hover:bg-white/5">Camere</a>
+      <a href="servizi.html"  data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white/70 rounded-lg hover:bg-white/5">Servizi</a>
+      <a href="location.html" data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white/70 rounded-lg hover:bg-white/5">Location</a>
+      <a href="about.html"    data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white rounded-lg bg-white/8">Chi siamo</a>
+      <a href="faq.html"      data-link class="block py-2.5 px-3 text-[15px] font-semibold text-white/70 rounded-lg hover:bg-white/5">FAQ</a>
+      <a href="contatti.html" data-link class="mt-2 block py-3 px-3 text-[15px] font-bold text-[#070B14] bg-[#C9A04A] rounded-xl text-center">Contattaci</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO VIDEO ═══════════════════ -->
+<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
+  <video class="hero-video absolute inset-0 w-full h-full object-cover z-0" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=80">
+    <source src="hero-video.mp4" type="video/mp4" />
+  </video>
+  <canvas id="hero-particles"></canvas>
+  <div class="absolute inset-0 z-[2]" style="background:linear-gradient(to bottom, rgba(7,11,20,.74) 0%, rgba(7,11,20,.44) 50%, #070B14 100%)"></div>
+  <div class="absolute inset-0 z-[2]" style="background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,160,74,.07) 0%, transparent 60%)"></div>
+
+  <div class="relative z-10 text-center max-w-5xl mx-auto px-6 py-36">
+    <div id="hero-badge" class="inline-flex items-center gap-2 bg-white/5 border border-[#C9A04A]/25 px-4 py-2 rounded-full text-[12.5px] text-[#C9A04A] font-semibold mb-8 tracking-wide opacity-0">
+      <span class="w-2 h-2 rounded-full bg-[#C9A04A] gold-pulse"></span>
+      Via De Rubeis · Udine · Residenza Studentesca
+    </div>
+    <h1 id="hero-title" class="font-display text-5xl md:text-[4.5rem] lg:text-[5.5rem] font-bold leading-[1.08] mb-7 tracking-tight">
+      <span class="split-line" data-split>Più di una <em class="not-italic gold-text" data-keep>residenza</em>.</span>
+      <span class="split-line" data-split>Una <em class="not-italic gold-text" data-keep>comunità</em>.</span>
+    </h1>
+    <p id="hero-sub" class="text-[1.1rem] md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed opacity-0">
+      Dal primo giorno crediamo che ogni studente meriti uno spazio che lo faccia sentire davvero a casa. Non solo un letto — un luogo dove crescere, conoscere, costruire.
+    </p>
+    <div id="hero-cta" class="flex items-center justify-center gap-4 flex-wrap opacity-0">
+      <a href="contatti.html" data-link data-magnetic class="px-8 py-4 bg-[#C9A04A] text-[#070B14] font-bold text-[15px] rounded-xl hover:bg-[#E2C98A] transition-colors shadow-xl shadow-[#C9A04A]/20">
+        Prenota una visita
+      </a>
+      <a href="camere.html" data-link data-magnetic class="px-8 py-4 border border-white/20 text-white font-semibold text-[15px] rounded-xl hover:border-white/40 hover:bg-white/6 transition-all">
+        Scopri le camere
+      </a>
+    </div>
+  </div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/30 arrow-bounce">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════════════ MANIFESTO ═══════════════════ -->
+<section class="py-24 px-6">
+  <div class="max-w-4xl mx-auto text-center" data-reveal>
+    <div class="w-10 h-px mx-auto mb-10" style="background:linear-gradient(to right,transparent,#C9A04A,transparent)"></div>
+    <p class="font-display text-2xl md:text-[2.1rem] font-medium leading-relaxed text-white/85 italic">
+      "Abbiamo accolto studenti da <span class="gold-text not-italic font-bold">oltre 15 nazioni</span>.
+      Ognuno ha portato la propria storia, arricchendo una comunità che oggi è molto più di una residenza."
+    </p>
+    <div class="w-10 h-px mx-auto mt-10" style="background:linear-gradient(to right,transparent,#C9A04A,transparent)"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LA NOSTRA STORIA ═══════════════════ -->
+<section class="py-16 px-6 bg-[#060910]">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+    <div data-reveal>
+      <span class="text-[11px] font-bold tracking-[.13em] text-[#C9A04A] uppercase">La nostra missione</span>
+      <h2 class="font-display text-4xl md:text-5xl font-bold mt-4 mb-7 leading-tight">Nati per essere<br />la tua casa a Udine</h2>
+      <p class="text-white/55 text-[1.05rem] leading-[1.8] mb-5">
+        La Residenza De Rubeis nasce dalla convinzione che ogni studente meriti uno spazio sicuro, confortevole e stimolante. Non un semplice dormitorio, ma un luogo dove le amicizie diventano relazioni durature e ogni giornata è un'opportunità.
+      </p>
+      <p class="text-white/55 text-[1.05rem] leading-[1.8] mb-10">
+        Siamo una realtà a misura d'uomo: ti conosciamo per nome, rispondiamo rapidamente e ci prendiamo cura di ogni dettaglio. In Via De Rubeis, a due passi dalla stazione e dall'università, trovi tutto per vivere al meglio i tuoi anni di studio.
+      </p>
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-3 text-[14.5px]"><span class="w-5 h-5 rounded-full bg-[#C9A04A]/15 flex items-center justify-center text-[#C9A04A] text-xs flex-shrink-0">✓</span><span class="text-white/70">Staff bilingue italiano e inglese</span></div>
+        <div class="flex items-center gap-3 text-[14.5px]"><span class="w-5 h-5 rounded-full bg-[#C9A04A]/15 flex items-center justify-center text-[#C9A04A] text-xs flex-shrink-0">✓</span><span class="text-white/70">Assistenza completa per studenti Erasmus</span></div>
+        <div class="flex items-center gap-3 text-[14.5px]"><span class="w-5 h-5 rounded-full bg-[#C9A04A]/15 flex items-center justify-center text-[#C9A04A] text-xs flex-shrink-0">✓</span><span class="text-white/70">Contratti flessibili da 3 a 12 mesi</span></div>
+        <div class="flex items-center gap-3 text-[14.5px]"><span class="w-5 h-5 rounded-full bg-[#C9A04A]/15 flex items-center justify-center text-[#C9A04A] text-xs flex-shrink-0">✓</span><span class="text-white/70">Risposta garantita entro 24 ore</span></div>
+      </div>
+    </div>
+    <div data-reveal>
+      <div class="relative rounded-3xl overflow-hidden" style="aspect-ratio:4/5">
+        <img data-parallax="-60" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=900&q=80" alt="Studenti alla Residenza De Rubeis" class="w-full h-[120%] object-cover" />
+        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(7,11,20,.7) 0%, transparent 50%)"></div>
+        <div class="absolute bottom-6 left-6 right-6 glass rounded-2xl p-5">
+          <div class="grid grid-cols-2 gap-4">
+            <div><div class="stat-num text-3xl font-bold font-display" data-count="50" data-suffix="+">0</div><div class="text-white/45 text-xs mt-1 font-medium">Posti letto</div></div>
+            <div><div class="stat-num text-3xl font-bold font-display" data-count="15" data-suffix="+">0</div><div class="text-white/45 text-xs mt-1 font-medium">Nazioni rappresentate</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ BENTO GRID ═══════════════════ -->
+<section class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-12" data-reveal>
+      <span class="text-[11px] font-bold tracking-[.13em] text-[#C9A04A] uppercase">Cosa offriamo</span>
+      <h2 class="font-display text-4xl md:text-5xl font-bold mt-3 mb-4">Servizi <span class="gold-text">premium</span> inclusi</h2>
+      <p class="text-white/45 text-[1.05rem] max-w-md">Il canone mensile copre tutto. Nessuna sorpresa, nessuna bolletta extra.</p>
+    </div>
+
+    <div class="bento">
+      <div data-bento class="b-lg bento-card rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden border border-[#1B2E4B]" style="background:linear-gradient(145deg,#0D1423 0%,#0F1E38 100%); min-height:248px">
+        <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(circle at 75% 25%, rgba(201,160,74,.18) 0%, transparent 55%)"></div>
+        <div class="absolute inset-0 pointer-events-none" style="background-image:radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px); background-size:28px 28px"></div>
+        <div class="relative">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-6 border" style="background:rgba(201,160,74,.1); border-color:rgba(201,160,74,.22)">📶</div>
+          <h3 class="font-display text-2xl md:text-3xl font-bold mb-3">WiFi Ultra-Veloce</h3>
+          <p class="text-white/50 leading-relaxed max-w-sm">Fibra ottica dedicata in ogni stanza. Nessun limite di banda. Ideale per videolezioni, ricerca e streaming. Stabile 24/7.</p>
+        </div>
+        <div class="relative mt-6 flex items-center gap-2 flex-wrap">
+          <span class="px-3 py-1.5 text-xs font-semibold rounded-full border" style="background:rgba(201,160,74,.1);border-color:rgba(201,160,74,.25);color:#C9A04A">Incluso nel canone</span>
+          <span class="px-3 py-1.5 text-xs rounded-full border border-white/10 text-white/40">Illimitato</span>
+        </div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B] relative overflow-hidden" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.2)">📚</div>
+        <div><h3 class="font-semibold text-white mb-2">Sale Studio</h3><p class="text-white/45 text-sm leading-relaxed">Spazi silenziosi con luce naturale, prese di corrente e grandi tavoli. Aperti ogni giorno.</p></div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B]" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.2)">🔒</div>
+        <div><h3 class="font-semibold text-white mb-2">Sicurezza H24</h3><p class="text-white/45 text-sm leading-relaxed">Accesso con badge personale, videosorveglianza e personale reperibile. Sempre al sicuro.</p></div>
+      </div>
+      <div data-bento class="b-wide bento-card rounded-2xl p-6 flex flex-col justify-between relative overflow-hidden border border-[#1B2E4B]" style="background:linear-gradient(135deg,#0A1428,#0F1F35); min-height:248px">
+        <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(circle at 80% 50%, rgba(201,160,74,.1) 0%, transparent 55%)"></div>
+        <div class="relative w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(201,160,74,.1);border-color:rgba(201,160,74,.22)">🎉</div>
+        <div class="relative"><h3 class="font-semibold text-white mb-2">Community ed eventi</h3><p class="text-white/45 text-sm leading-relaxed">Serate internazionali, aperitivi, cinema e eventi culturali per studenti italiani e stranieri. Non sei mai solo a Udine.</p></div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B]" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(251,146,60,.1);border-color:rgba(251,146,60,.2)">🍳</div>
+        <div><h3 class="font-semibold text-white mb-2">Cucine comuni</h3><p class="text-white/45 text-sm leading-relaxed">Frigorifero, microonde, fornelli e lavastoviglie a disposizione. Perfette per risparmiare.</p></div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B]" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.2)">🌍</div>
+        <div><h3 class="font-semibold text-white mb-2">Supporto Erasmus</h3><p class="text-white/45 text-sm leading-relaxed">Staff bilingue IT/EN. Aiutiamo con codice fiscale, burocrazia e tutto il necessario all'arrivo.</p></div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B]" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.2)">🧺</div>
+        <div><h3 class="font-semibold text-white mb-2">Lavanderia</h3><p class="text-white/45 text-sm leading-relaxed">Lavatrici e asciugatrici a gettone disponibili con orari flessibili.</p></div>
+      </div>
+      <div data-bento class="bento-card rounded-2xl p-6 flex flex-col justify-between border border-[#1B2E4B]" style="background:#0D1423; min-height:248px">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-4 border" style="background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.2)">🚲</div>
+        <div><h3 class="font-semibold text-white mb-2">Parcheggio bici</h3><p class="text-white/45 text-sm leading-relaxed">Box chiuso e sicuro per bici, monopattini e scooter. Udine si gira meglio in bici.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ STATS ═══════════════════ -->
+<section class="py-20 px-6 bg-[#060910]">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4">
+      <div class="text-center py-8 px-4 border-r border-white/5" data-reveal><div class="stat-num font-display text-5xl md:text-6xl font-bold mb-2" data-count="50" data-suffix="+">0</div><div class="text-white/35 text-sm font-semibold tracking-wide">Posti letto</div></div>
+      <div class="text-center py-8 px-4 border-r border-white/5" data-reveal><div class="stat-num font-display text-5xl md:text-6xl font-bold mb-2" data-count="15" data-suffix="+">0</div><div class="text-white/35 text-sm font-semibold tracking-wide">Nazioni rappresentate</div></div>
+      <div class="text-center py-8 px-4 border-r border-white/5" data-reveal><div class="stat-num font-display text-5xl md:text-6xl font-bold mb-2" data-count="100" data-suffix="%">0</div><div class="text-white/35 text-sm font-semibold tracking-wide">Studenti soddisfatti</div></div>
+      <div class="text-center py-8 px-4" data-reveal><div class="stat-num font-display text-5xl md:text-6xl font-bold mb-2" data-count="10" data-suffix="+">0</div><div class="text-white/35 text-sm font-semibold tracking-wide">Anni di esperienza</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ GALLERIA 3D ═══════════════════ -->
+<section class="py-20 px-6" style="perspective:1200px">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14" data-reveal>
+      <span class="text-[11px] font-bold tracking-[.13em] text-[#C9A04A] uppercase">Uno sguardo dentro</span>
+      <h2 class="font-display text-4xl md:text-5xl font-bold mt-3">La vita in residenza</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div data-reveal class="gal-card relative rounded-2xl overflow-hidden border border-[#1B2E4B]" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80" alt="Camera privata" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="gal-shine"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(7,11,20,.85) 0%, transparent 55%)"></div>
+        <div class="gal-inner absolute bottom-6 left-6 right-6">
+          <span class="text-[10px] font-bold tracking-widest text-[#C9A04A] uppercase">Camere</span>
+          <h3 class="font-display text-2xl font-bold mt-1">Il tuo spazio privato</h3>
+        </div>
+      </div>
+      <div data-reveal class="gal-card relative rounded-2xl overflow-hidden border border-[#1B2E4B]" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=700&q=80" alt="Spazi comuni" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="gal-shine"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(7,11,20,.85) 0%, transparent 55%)"></div>
+        <div class="gal-inner absolute bottom-6 left-6 right-6">
+          <span class="text-[10px] font-bold tracking-widest text-[#C9A04A] uppercase">Community</span>
+          <h3 class="font-display text-2xl font-bold mt-1">Aree condivise</h3>
+        </div>
+      </div>
+      <div data-reveal class="gal-card relative rounded-2xl overflow-hidden border border-[#1B2E4B]" style="aspect-ratio:3/4">
+        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=700&q=80" alt="Sale studio" class="absolute inset-0 w-full h-full object-cover" />
+        <div class="gal-shine"></div>
+        <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(7,11,20,.85) 0%, transparent 55%)"></div>
+        <div class="gal-inner absolute bottom-6 left-6 right-6">
+          <span class="text-[10px] font-bold tracking-widest text-[#C9A04A] uppercase">Studio</span>
+          <h3 class="font-display text-2xl font-bold mt-1">Concentrazione</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ VALORI ═══════════════════ -->
+<section class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14" data-reveal>
+      <span class="text-[11px] font-bold tracking-[.13em] text-[#C9A04A] uppercase">I nostri pilastri</span>
+      <h2 class="font-display text-4xl md:text-5xl font-bold mt-3">I valori che ci guidano</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div data-reveal class="gold-border-card rounded-2xl p-7" style="background:#0D1423"><div class="text-[13px] font-bold text-[#C9A04A]/40 tracking-widest mb-5">01</div><div class="text-3xl mb-4">🤝</div><h3 class="font-display text-xl font-bold mb-3">Comunità</h3><p class="text-white/45 text-sm leading-relaxed">Creiamo connessioni genuine tra studenti di ogni cultura e provenienza.</p></div>
+      <div data-reveal class="gold-border-card rounded-2xl p-7" style="background:#0D1423"><div class="text-[13px] font-bold text-[#C9A04A]/40 tracking-widest mb-5">02</div><div class="text-3xl mb-4">🔒</div><h3 class="font-display text-xl font-bold mb-3">Sicurezza</h3><p class="text-white/45 text-sm leading-relaxed">Un ambiente protetto e monitorato dove concentrarsi sullo studio senza pensieri.</p></div>
+      <div data-reveal class="gold-border-card rounded-2xl p-7" style="background:#0D1423"><div class="text-[13px] font-bold text-[#C9A04A]/40 tracking-widest mb-5">03</div><div class="text-3xl mb-4">🌱</div><h3 class="font-display text-xl font-bold mb-3">Crescita</h3><p class="text-white/45 text-sm leading-relaxed">Supportiamo il percorso accademico e personale di ogni studente con cura.</p></div>
+      <div data-reveal class="gold-border-card rounded-2xl p-7" style="background:#0D1423"><div class="text-[13px] font-bold text-[#C9A04A]/40 tracking-widest mb-5">04</div><div class="text-3xl mb-4">🌍</div><h3 class="font-display text-xl font-bold mb-3">Internazionalità</h3><p class="text-white/45 text-sm leading-relaxed">Aperti al mondo, radicati in Friuli. La diversità è la nostra forza.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CTA CONTATTI ═══════════════════ -->
+<section class="py-24 px-6 relative overflow-hidden">
+  <div class="absolute inset-0" style="background:linear-gradient(135deg,#07090E 0%,#0C1525 50%,#070B14 100%)"></div>
+  <div class="absolute inset-0 pointer-events-none" style="background-image:radial-gradient(rgba(255,255,255,.02) 1px, transparent 1px);background-size:28px 28px"></div>
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 80% at 50% 50%, rgba(201,160,74,.06) 0%, transparent 60%)"></div>
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-px" style="background:linear-gradient(to right,transparent,#C9A04A,transparent)"></div>
+
+  <div class="relative z-10 max-w-3xl mx-auto text-center" data-reveal>
+    <span class="text-[11px] font-bold tracking-[.13em] text-[#C9A04A] uppercase">Inizia il tuo percorso</span>
+    <h2 class="font-display text-4xl md:text-5xl font-bold mt-4 mb-5 leading-tight">Pronto a scegliere<br />la tua nuova casa?</h2>
+    <p class="text-white/50 text-[1.05rem] leading-relaxed mb-10 max-w-xl mx-auto">
+      I posti sono limitati. Contattaci oggi per verificare la disponibilità e prenotare una visita — anche in videochiamata se sei all'estero.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+      <a href="contatti.html" data-link data-magnetic class="w-full sm:w-auto px-8 py-4 bg-[#C9A04A] text-[#070B14] font-bold text-[15px] rounded-xl hover:bg-[#E2C98A] transition-colors shadow-xl shadow-[#C9A04A]/20 text-center">Richiedi disponibilità</a>
+      <a href="https://wa.me/39000000000?text=Ciao!%20Vorrei%20informazioni%20sulla%20Residenza%20De%20Rubeis." data-magnetic class="w-full sm:w-auto px-8 py-4 font-bold text-[15px] rounded-xl transition-all text-center border border-[#22C55E]/40 text-[#22C55E] hover:bg-[#22C55E]/8 hover:border-[#22C55E]/70">💬 Scrivici su WhatsApp</a>
+      <a href="mailto:info@residenzaderubeis.it" data-magnetic class="w-full sm:w-auto px-8 py-4 border border-white/15 text-white font-semibold text-[15px] rounded-xl hover:border-white/35 hover:bg-white/5 transition-all text-center">✉️ Invia un'email</a>
+    </div>
+    <div class="inline-flex items-center gap-3 glass rounded-2xl px-6 py-4">
+      <div class="text-2xl">📍</div>
+      <div class="text-left">
+        <div class="text-white font-semibold text-sm">Via De Rubeis, 33100 Udine</div>
+        <div class="text-white/45 text-xs mt-0.5">Lun–Ven 9:00–18:00 · Sab su appuntamento</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="px-6 pb-8 pt-0 bg-[#040710]">
+  <div class="max-w-7xl mx-auto">
+    <div class="h-px mb-14" style="background:linear-gradient(to right,transparent,#C9A04A,#1C5BAD,#C9A04A,transparent)"></div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+      <div class="md:col-span-2">
+        <a href="index.html" data-link class="font-display text-[1.2rem] font-bold">Residenza <span class="gold-text">De Rubeis</span></a>
+        <p class="text-white/38 text-sm leading-relaxed mt-4 max-w-xs">Residenza studentesca moderna in Via De Rubeis, Udine. A pochi passi dall'Università degli Studi di Udine e dalla stazione ferroviaria.</p>
+      </div>
+      <div>
+        <h4 class="text-[11px] font-bold tracking-[.12em] text-white/25 uppercase mb-4">Pagine</h4>
+        <div class="flex flex-col gap-2">
+          <a href="index.html"    data-link class="text-[13.5px] text-white/50 hover:text-white transition-colors">Home</a>
+          <a href="camere.html"   data-link class="text-[13.5px] text-white/50 hover:text-white transition-colors">Camere</a>
+          <a href="servizi.html"  data-link class="text-[13.5px] text-white/50 hover:text-white transition-colors">Servizi</a>
+          <a href="location.html" data-link class="text-[13.5px] text-white/50 hover:text-white transition-colors">Location</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-[11px] font-bold tracking-[.12em] text-white/25 uppercase mb-4">Contatti</h4>
+        <div class="flex flex-col gap-2">
+          <a href="tel:+390432000000"               class="text-[13.5px] text-white/50 hover:text-white transition-colors">+39 0432 000000</a>
+          <a href="mailto:info@residenzaderubeis.it" class="text-[13.5px] text-white/50 hover:text-white transition-colors">info@residenzaderubeis.it</a>
+          <a href="faq.html"      data-link          class="text-[13.5px] text-white/50 hover:text-white transition-colors">FAQ</a>
+          <a href="contatti.html" data-link          class="text-[13.5px] text-white/50 hover:text-white transition-colors">Contattaci</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/6 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12.5px] text-white/25">
+      <span>© 2025 Residenza De Rubeis. Tutti i diritti riservati.</span>
+      <div class="flex gap-5"><a href="#" class="hover:text-white/60 transition-colors">Privacy Policy</a><a href="#" class="hover:text-white/60 transition-colors">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  /* ───── PAGE TRANSITION (intro + exit) ───── */
+  var curtain = document.getElementById('page-curtain');
+  var curtainLogo = curtain.querySelector('.curtain-logo');
+  window.addEventListener('load', function () {
+    gsap.timeline()
+      .to(curtainLogo, { opacity: 1, duration: .4, ease: 'power2.out' })
+      .to(curtainLogo, { opacity: 0, duration: .35, delay: .35, ease: 'power2.in' })
+      .to(curtain, { yPercent: -100, duration: .7, ease: 'power4.inOut', onComplete: function () { curtain.style.display = 'none'; } }, '-=.1')
+      .add(startHero);
+  });
+
+  /* Exit transition on internal links */
+  document.querySelectorAll('a[data-link]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || link.target === '_blank') return;
+      e.preventDefault();
+      curtain.style.display = 'flex';
+      gsap.set(curtain, { yPercent: 100 });
+      gsap.timeline()
+        .to(curtain, { yPercent: 0, duration: .55, ease: 'power4.inOut' })
+        .to(curtainLogo, { opacity: 1, duration: .3 }, '-=.2')
+        .add(function () { window.location.href = href; });
+    });
+  });
+
+  /* ───── HERO: letter-by-letter + reveals ───── */
+  function splitChars(el) {
+    var nodes = Array.prototype.slice.call(el.childNodes);
+    el.innerHTML = '';
+    nodes.forEach(function (node) {
+      if (node.nodeType === 3) {
+        node.textContent.split('').forEach(function (ch) {
+          var s = document.createElement('span');
+          s.className = 'char';
+          s.textContent = ch;
+          if (ch === ' ') s.innerHTML = '&nbsp;';
+          el.appendChild(s);
+        });
+      } else if (node.nodeType === 1) {
+        node.classList.add('char'); // keep gold <em> intact as one unit
+        el.appendChild(node);
+      }
+    });
+  }
+
+  function startHero() {
+    var allChars = [];
+    document.querySelectorAll('#hero-title [data-split]').forEach(function (line) {
+      splitChars(line);
+      allChars = allChars.concat(Array.prototype.slice.call(line.querySelectorAll('.char')));
+    });
+
+    var tl = gsap.timeline();
+    tl.from('#hero-badge', { opacity: 0, y: -16, duration: .6, ease: 'power3.out' })
+      .set('#hero-badge', { clearProps: 'opacity' }, 0)
+      .to('#hero-badge', { opacity: 1, duration: .01 }, 0)
+      .from(allChars, {
+        opacity: 0, yPercent: 110, rotateZ: 4, duration: .8,
+        ease: 'power4.out', stagger: 0.022
+      }, .15)
+      .to('#hero-sub', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, '-=.5')
+      .from('#hero-sub', { y: 22 }, '<')
+      .to('#hero-cta', { opacity: 1, y: 0, duration: .7, ease: 'power3.out' }, '-=.55')
+      .from('#hero-cta', { y: 22 }, '<');
+  }
+
+  /* ───── NAVBAR scroll style ───── */
+  var nav = document.getElementById('navbar');
+  var navInner = document.getElementById('nav-inner');
+  function updateNav() {
+    if (window.scrollY > 60) {
+      nav.classList.remove('nav-clear'); nav.classList.add('nav-solid');
+      navInner.style.height = '64px';
+    } else {
+      nav.classList.remove('nav-solid'); nav.classList.add('nav-clear');
+      navInner.style.height = '78px';
+    }
+  }
+  updateNav();
+  window.addEventListener('scroll', updateNav, { passive: true });
+
+  /* Mobile menu */
+  var mb = document.getElementById('menu-btn'), mm = document.getElementById('mobile-menu');
+  mb.addEventListener('click', function () { mm.classList.toggle('hidden'); });
+
+  /* ───── SCROLL REVEALS (GSAP ScrollTrigger) ───── */
+  if (!reduce) {
+    gsap.utils.toArray('[data-reveal]').forEach(function (el) {
+      gsap.from(el, {
+        opacity: 0, y: 40, duration: .9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%' }
+      });
+    });
+
+    /* Stagger children inside bento + grids */
+    gsap.from('[data-bento]', {
+      opacity: 0, y: 50, scale: .96, duration: .8, ease: 'power3.out', stagger: .08,
+      scrollTrigger: { trigger: '.bento', start: 'top 80%' }
+    });
+
+    /* ───── PARALLAX ───── */
+    gsap.utils.toArray('[data-parallax]').forEach(function (el) {
+      var dist = parseFloat(el.getAttribute('data-parallax')) || -60;
+      gsap.fromTo(el, { y: -dist }, {
+        y: dist, ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    });
+  } else {
+    gsap.set('[data-reveal], [data-bento]', { opacity: 1, y: 0 });
+  }
+
+  /* ───── ANIMATED COUNTERS from 0 ───── */
+  gsap.utils.toArray('[data-count]').forEach(function (el) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var suffix = el.getAttribute('data-suffix') || '';
+    var obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el, start: 'top 88%', once: true,
+      onEnter: function () {
+        gsap.to(obj, {
+          v: target, duration: 1.8, ease: 'power2.out',
+          onUpdate: function () { el.textContent = Math.floor(obj.v) + suffix; },
+          onComplete: function () { el.textContent = target + suffix; }
+        });
+      }
+    });
+  });
+
+  /* ───── CUSTOM CURSOR (fine pointer only) ───── */
+  if (finePointer && !reduce) {
+    var dot = document.querySelector('.cursor-dot');
+    var ring = document.querySelector('.cursor-ring');
+    var rx = 0, ry = 0, dx = 0, dy = 0;
+    var xSetDot = gsap.quickSetter(dot, 'x', 'px'), ySetDot = gsap.quickSetter(dot, 'y', 'px');
+    window.addEventListener('mousemove', function (e) {
+      dx = e.clientX; dy = e.clientY;
+      xSetDot(dx); ySetDot(dy);
+    });
+    gsap.ticker.add(function () {
+      rx += (dx - rx) * 0.18; ry += (dy - ry) * 0.18;
+      gsap.set(ring, { x: rx, y: ry });
+    });
+    document.querySelectorAll('a, button, [data-magnetic], .gal-card').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { ring.classList.add('grow'); });
+      el.addEventListener('mouseleave', function () { ring.classList.remove('grow'); });
+    });
+  }
+
+  /* ───── MAGNETIC BUTTONS ───── */
+  if (finePointer && !reduce) {
+    document.querySelectorAll('[data-magnetic]').forEach(function (el) {
+      var strength = 0.4;
+      el.addEventListener('mousemove', function (e) {
+        var r = el.getBoundingClientRect();
+        var mx = e.clientX - (r.left + r.width / 2);
+        var my = e.clientY - (r.top + r.height / 2);
+        gsap.to(el, { x: mx * strength, y: my * strength, duration: .4, ease: 'power3.out' });
+      });
+      el.addEventListener('mouseleave', function () {
+        gsap.to(el, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1, .4)' });
+      });
+    });
+  }
+
+  /* ───── 3D TILT GALLERY ───── */
+  if (finePointer && !reduce) {
+    document.querySelectorAll('.gal-card').forEach(function (card) {
+      var shine = card.querySelector('.gal-shine');
+      card.addEventListener('mousemove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        var rotY = (px - 0.5) * 16;
+        var rotX = (0.5 - py) * 16;
+        gsap.to(card, { rotateX: rotX, rotateY: rotY, duration: .4, ease: 'power2.out', transformPerspective: 900 });
+        if (shine) { shine.style.setProperty('--mx', (px * 100) + '%'); shine.style.setProperty('--my', (py * 100) + '%'); }
+      });
+      card.addEventListener('mouseleave', function () {
+        gsap.to(card, { rotateX: 0, rotateY: 0, duration: .7, ease: 'elastic.out(1, .5)' });
+      });
+    });
+  }
+
+  /* ───── HERO PARTICLES (canvas) ───── */
+  if (!reduce) {
+    var canvas = document.getElementById('hero-particles');
+    var ctx = canvas.getContext('2d');
+    var heroEl = document.querySelector('.hero-section');
+    var particles = [], W, H, raf;
+
+    function resize() {
+      W = canvas.width = heroEl.offsetWidth;
+      H = canvas.height = heroEl.offsetHeight;
+      var count = Math.min(70, Math.floor(W / 22));
+      particles = [];
+      for (var i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * W, y: Math.random() * H,
+          r: Math.random() * 1.8 + 0.4,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          a: Math.random() * 0.5 + 0.1
+        });
+      }
+    }
+    var mouse = { x: -999, y: -999 };
+    heroEl.addEventListener('mousemove', function (e) {
+      var r = heroEl.getBoundingClientRect();
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+    });
+    heroEl.addEventListener('mouseleave', function () { mouse.x = mouse.y = -999; });
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        // gentle attraction to mouse
+        var ddx = mouse.x - p.x, ddy = mouse.y - p.y, dist = Math.sqrt(ddx*ddx + ddy*ddy);
+        if (dist < 140) { p.x += ddx * 0.006; p.y += ddy * 0.006; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(201,160,74,' + p.a + ')';
+        ctx.fill();
+      }
+      // connect nearby particles
+      for (var a = 0; a < particles.length; a++) {
+        for (var b = a + 1; b < particles.length; b++) {
+          var p1 = particles[a], p2 = particles[b];
+          var d = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+          if (d < 110) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = 'rgba(201,160,74,' + (0.08 * (1 - d / 110)) + ')';
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+  }
+
+  /* ───── Scroll-to-top ───── */
+  var stb = document.createElement('button');
+  stb.innerHTML = '↑';
+  stb.setAttribute('aria-label', 'Torna in cima');
+  stb.style.cssText = 'position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:#0C1F3A;color:#fff;font-size:1.1rem;z-index:98;opacity:0;transform:translateY(14px);transition:all .3s ease;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4)';
+  document.body.appendChild(stb);
+  window.addEventListener('scroll', function () {
+    var show = window.scrollY > 500;
+    stb.style.opacity = show ? '1' : '0';
+    stb.style.transform = show ? 'none' : 'translateY(14px)';
+  }, { passive: true });
+  stb.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
